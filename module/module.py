@@ -292,11 +292,11 @@ class InfluxdbBroker(BaseModule):
         event = LogEvent(log)
 
         if len(event) > 0:
-            # include service_desc in the table name if present
+            # include service_description in the table name if present
             if 'service_desc' in event and event['service_desc'] is not None:
-                service_desc = event['service_desc']
+                service_description = event['service_desc']
             else:
-                service_desc = '_self_'
+                service_description = '_self_'
 
             point = {
                 "name": "ALERT",
@@ -304,7 +304,7 @@ class InfluxdbBroker(BaseModule):
                 "fields": {},
                 "tags": {
                     "host_name": event['hostname'],
-                    "service_desc": service_desc,
+                    "service_description": service_description,
                     "event_type": event['event_type'],
                 }
             }
