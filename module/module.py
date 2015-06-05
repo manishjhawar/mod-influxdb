@@ -121,14 +121,16 @@ class InfluxdbBroker(BaseModule):
         points = []
 
         if data['state'] != data['last_state'] or \
-                data['state_type'] != data['last_state_type']:
+                data['state_type'] != data['last_state_type'] and \
+                data['event_type'] != "ALERT":
 
             points.append(
                 {
-                    "name": "ALERT",
+                    "name": "LOG",
                     "tags": tags,
                     "time": data['last_chk'],
                     "fields": {
+                        "event_type": data['event_type'],
                         "state": data['state'],
                         "state_type": data['state_type'],
                         "output": data['output'],
@@ -299,7 +301,7 @@ class InfluxdbBroker(BaseModule):
                 service_description = '_self_'
 
             point = {
-                "name": "ALERT",
+                "name": "LOG",
                 "time": event['time'],
                 "fields": {},
                 "tags": {
@@ -312,7 +314,7 @@ class InfluxdbBroker(BaseModule):
             # Add each property of the service in the point
             for prop in [
                 prop for prop in event
-                if prop[0] not in ['hostname', 'event_type', 'service_desc']
+                if prop[0] not in ['host_name', 'event_type', 'service_description']
             ]:
                 point['fields'][prop[0]] = prop[1]
 
